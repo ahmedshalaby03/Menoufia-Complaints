@@ -19,10 +19,12 @@ public class RagDuplicateCheckService : IRagDuplicateCheckService
     private static readonly ComplaintStatus[] ExcludedStatuses =
         { ComplaintStatus.Rejected };
 
-    public RagDuplicateCheckService(IUnitOfWork uow, IEmbeddingProvider embeddingProvider)
+    public RagDuplicateCheckService(IUnitOfWork uow, IEmbeddingProvider embeddingProvider, IConfiguration configuration)
     {
         _uow = uow;
         _embeddingProvider = embeddingProvider;
+        _configuration = configuration;
+
     }
 
     public async Task<DuplicateCheckResultDto> CheckForDuplicatesAsync(string description, CancellationToken ct = default)

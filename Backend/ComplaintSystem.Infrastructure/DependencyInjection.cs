@@ -30,9 +30,15 @@ public static class DependencyInjection
 
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         services.Configure<OpenAiSettings>(configuration.GetSection("OpenAI"));
+        services.Configure<GeminiSettings>(configuration.GetSection("Gemini"));
 
         services.AddHttpContextAccessor();
-        services.AddHttpClient<IEmbeddingProvider, OpenAiEmbeddingProvider>();
+
+        var embeddingProvider = configuration.GetValue<string>("Rag:Provider") ?? "OpenAI";
+        if (embeddingProvider.Equals("Gemini", StringComparison.OrdinalIgnoreCase))
+            services.AddHttpClient<IEmbeddingProvider, GeminiEmbeddingProvider>();
+        else
+            services.AddHttpClient<IEmbeddingProvider, OpenAiEmbeddingProvider>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
