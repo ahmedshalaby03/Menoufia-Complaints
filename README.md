@@ -94,7 +94,7 @@ Update-Database -StartupProject ComplaintSystem.API
 ```
 
 شغّل المشروع (F5) — هيعمل seed تلقائي لـ:
-- حساب أدمن افتراضي: `admin@menoufia.gov.eg` / `Admin@12345`
+- حساب أدمن افتراضي: `admin@gmail.com` / `Admin@123`
 - محافظات مصر، مراكز المنوفية، القطاعات والخدمات، والكيانات الحكومية
 
 الـ API هيفتح على Swagger تلقائيًا (المسار الظاهر في `launchSettings.json`).
