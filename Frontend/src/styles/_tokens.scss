@@ -1,0 +1,55 @@
+// ===== Design Tokens - نظام الشكاوى الحكومية الموحدة - محافظة المنوفية =====
+
+:root {
+  // الألوان الأساسية
+  --color-bg: #FFFFFF;
+  --color-surface: #F6F9F7;
+  --color-surface-alt: #EEF3EF;
+  --color-border: #DCE6E0;
+
+  // الأخضر - اللون الأساسي (هوية حكومية رسمية)
+  --color-primary: #0B4A2E;
+  --color-primary-light: #1E6B45;
+  --color-primary-dark: #073320;
+  --color-primary-tint: #E6F0EA; // خلفية فاتحة جدًا للأخضر (badges, hover)
+
+  // الأحمر - لمسة من الشعار (تحذيرات، عاجل)
+  --color-red: #B3202C;
+  --color-red-tint: #FBEAEC;
+
+  // الذهبي - تفاصيل دقيقة بس (من الشعار)
+  --color-gold: #C9A227;
+
+  // حالات الأولوية
+  --color-priority-urgent: #B3202C;
+  --color-priority-high: #D97706;
+  --color-priority-medium: #C9A227;
+  --color-priority-low: #1E6B45;
+
+  // النصوص
+  --color-text: #12241C;
+  --color-text-muted: #5B6E63;
+  --color-text-on-primary: #FFFFFF;
+
+  // ظلال
+  --shadow-sm: 0 1px 2px rgba(11, 74, 46, 0.06);
+  --shadow-md: 0 4px 16px rgba(11, 74, 46, 0.08);
+  --shadow-lg: 0 12px 32px rgba(11, 74, 46, 0.12);
+
+  // الخط
+  --font-arabic: 'Cairo', 'IBM Plex Sans Arabic', 'Segoe UI', sans-serif;
+
+  // زوايا
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  // مسافات
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+}

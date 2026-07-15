@@ -1,0 +1,35 @@
+<div class="page-layout">
+  <app-sidebar role="admin" />
+
+  <main class="page-content">
+    <header class="page-header">
+      <div>
+        <h1>صندوق الوارد</h1>
+        <p>الشكاوى المعينة لك أو لفريقك</p>
+      </div>
+      <span class="badge-count" *ngIf="result() as r">{{ r.totalCount }}</span>
+    </header>
+
+    <div class="filter-tabs">
+      <button *ngFor="let f of filters" [class.active]="activeFilter === f.key" (click)="setFilter(f.key)">
+        {{ f.label }}
+      </button>
+    </div>
+
+    <div class="complaint-card" *ngFor="let c of result()?.items" [routerLink]="['/admin/complaints', c.id]">
+      <div class="complaint-card__main">
+        <div class="complaint-card__title-row">
+          <strong>{{ c.subject }}</strong>
+          <span class="muted">#{{ c.complaintNumber }}</span>
+        </div>
+        <p>{{ c.description }}</p>
+      </div>
+      <div class="complaint-card__meta">
+        <app-priority-badge [priority]="c.priority" />
+        <app-status-badge [status]="c.status" />
+      </div>
+    </div>
+
+    <p class="empty-state" *ngIf="result() && result()!.items.length === 0">لا توجد شكاوى في صندوق الوارد</p>
+  </main>
+</div>

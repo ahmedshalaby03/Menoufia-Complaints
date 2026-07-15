@@ -1,0 +1,44 @@
+<aside class="sidebar">
+  <div class="brand">
+    <img src="assets/images/monoufia-logo.png" alt="شعار محافظة المنوفية" class="logo" />
+    <div class="brand-text">
+      <strong>المنوفية</strong>
+      <span>نظام الشكاوى</span>
+    </div>
+  </div>
+
+  <div class="user-box">
+    <div class="avatar">{{ auth.currentUser()?.fullName?.charAt(0) }}</div>
+    <div class="user-info">
+      <strong>{{ auth.currentUser()?.fullName }}</strong>
+      <span>{{ auth.currentUser()?.email }}</span>
+    </div>
+    <span class="role-tag">{{ role === 'admin' ? 'مشرف' : 'موظف' }}</span>
+  </div>
+
+  <nav class="nav">
+    <a *ngIf="role === 'employee'" routerLink="/employee/dashboard" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> لوحة التحكم
+    </a>
+    <a *ngIf="role === 'admin'" routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> لوحة التحكم
+    </a>
+
+    <a [routerLink]="role === 'admin' ? '/admin/complaints' : '/employee/complaints'" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> الشكاوى
+    </a>
+
+    <a *ngIf="role === 'employee'" routerLink="/employee/complaints/new" routerLinkActive="active" class="nav-item nav-item--cta">
+      <span class="dot"></span> شكوى جديدة
+    </a>
+
+    <a *ngIf="role === 'admin'" routerLink="/admin/inbox" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> صندوق الوارد
+    </a>
+    <a *ngIf="role === 'admin'" routerLink="/admin/reports" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> التقارير
+    </a>
+  </nav>
+
+  <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
+</aside>

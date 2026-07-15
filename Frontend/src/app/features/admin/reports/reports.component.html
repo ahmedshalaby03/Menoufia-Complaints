@@ -1,0 +1,58 @@
+<div class="page-layout">
+  <app-sidebar role="admin" />
+
+  <main class="page-content" *ngIf="reports() as r">
+    <header class="page-header">
+      <div>
+        <h1>التقارير</h1>
+        <p>إحصائيات وتحليلات الشكاوى والمقترحات</p>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <app-stat-card label="معدل الإنجاز" [value]="r.completionRatePercent + '%'" icon="↗" tone="gold" />
+      <app-stat-card label="معلقة" [value]="r.pendingCount" icon="◷" tone="neutral" />
+      <app-stat-card label="مقفولة" [value]="r.closedCount" icon="✓" tone="primary" />
+      <app-stat-card label="إجمالي الشكاوى" [value]="r.totalCount" icon="≡" tone="red" />
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>توزيع الأولويات</h3>
+        <div class="dist-row" *ngFor="let entry of r.priorityDistribution | keyvalue">
+          <span>{{ entry.key }}</span><strong>{{ entry.value }}</strong>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>توزيع الحالات</h3>
+        <div class="dist-row" *ngFor="let entry of r.statusDistribution | keyvalue">
+          <span>{{ entry.key }}</span><strong>{{ entry.value }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>أداء الكيانات</h3>
+      <table class="entity-table">
+        <thead>
+          <tr><th>الكيان</th><th>معدل الإنجاز</th><th>معلقة</th><th>مقفولة</th><th>إجمالي الشكاوى</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of r.entityPerformance">
+            <td>{{ e.entityName }}</td>
+            <td>{{ e.completionRatePercent }}%</td>
+            <td>{{ e.pendingCount }}</td>
+            <td>{{ e.closedCount }}</td>
+            <td>{{ e.totalCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="stats-grid stats-grid--3">
+      <app-stat-card label="معدل الرفض" [value]="r.rejectionRatePercent + '%'" icon="✕" tone="red" />
+      <app-stat-card label="أعلى أولوية" [value]="r.topPriority || '-'" icon="▲" tone="gold" />
+      <app-stat-card label="متوسط وقت الاستجابة (أيام)" [value]="r.averageResponseTimeDays" icon="⏱" tone="primary" />
+    </section>
+  </main>
+</div>

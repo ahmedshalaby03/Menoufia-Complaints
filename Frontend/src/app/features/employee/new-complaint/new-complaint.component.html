@@ -1,0 +1,215 @@
+<div class="page-layout">
+  <app-sidebar role="employee" />
+
+  <main class="page-content">
+    <header class="page-header">
+      <div>
+        <h1>تقديم شكوى جديدة</h1>
+        <p>ساعدنا على تحسين الخدمات بإبلاغنا عن المشاكل</p>
+      </div>
+    </header>
+
+    <div class="steps-tabs">
+      <div class="step-tab" [class.active]="step() === 1">الخطوة 1</div>
+      <div class="step-tab" [class.active]="step() === 2">الخطوة 2</div>
+      <div class="step-tab" [class.active]="step() === 3">التأكيد</div>
+    </div>
+
+    <!-- ============ STEP 1 ============ -->
+    <section class="form-panel" *ngIf="step() === 1">
+      <h2>معلومات الشكوى</h2>
+
+      <div class="field">
+        <label>العنوان <span class="req">*</span></label>
+        <input type="text" [(ngModel)]="form.subject" placeholder="أدخل عنوان الشكوى" />
+      </div>
+
+      <div class="field">
+        <label>الوصف التفصيلي <span class="req">*</span></label>
+        <textarea [(ngModel)]="form.description" (ngModelChange)="onDescriptionChange()" placeholder="صف المشكلة بالتفصيل"></textarea>
+      </div>
+
+      <!-- ===== RAG duplicate warning ===== -->
+      <div class="duplicate-check" *ngIf="checkingDuplicates()">
+        <span class="spinner"></span> جارِ التحقق من وجود شكاوى مشابهة...
+      </div>
+
+      <div class="duplicate-warning" *ngIf="duplicateResult() as d">
+        <ng-container *ngIf="d.hasPossibleDuplicates; else noDup">
+          <div class="duplicate-warning__header">
+            ⚠ تنبيه: تم العثور على {{ d.matches.length }} شكوى مشابهة محتملة
+          </div>
+          <div class="duplicate-match" *ngFor="let m of d.matches">
+            <div class="duplicate-match__info">
+              <strong>{{ m.subject }}</strong>
+              <span class="muted">#{{ m.complaintNumber }} — تشابه {{ (m.similarityScore * 100).toFixed(0) }}%</span>
+              <p>{{ m.description }}</p>
+            </div>
+            <span class="badge badge-status">{{ statusLabels[m.status] }}</span>
+          </div>
+          <p class="duplicate-warning__note">لو الشكوى دي فعلاً جديدة ومختلفة، اضغط "متابعة رغم التشابه" في آخر الخطوات.</p>
+        </ng-container>
+        <ng-template #noDup></ng-template>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>مصدر الشكوى <span class="req">*</span></label>
+          <select [(ngModel)]="form.source">
+            <option *ngFor="let o of sourceOptions" [ngValue]="o.value">{{ o.label }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>نوع الشكوى <span class="req">*</span></label>
+          <select [(ngModel)]="form.type">
+            <option *ngFor="let o of typeOptions" [ngValue]="o.value">{{ o.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>المحافظة <span class="req">*</span></label>
+          <select [(ngModel)]="form.governorateId" (ngModelChange)="onGovernorateChange()">
+            <option  [ngValue]="null" disabled>اختر محافظة</option>
+            <option *ngFor="let g of governorates" [ngValue]="g.id">{{ g.nameAr }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>المركز / المدينة <span class="req">*</span></label>
+          <select [(ngModel)]="form.centerId" [disabled]="!form.governorateId">
+            <option  [ngValue]="null" disabled>اختر مركز</option>
+            <option *ngFor="let c of centers" [ngValue]="c.id">{{ c.nameAr }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>الحي / القرية</label>
+          <input type="text" [(ngModel)]="form.district" placeholder="أدخل موقع المشكلة (اختياري)" />
+        </div>
+        <div class="field">
+          <label>تصنيف الشكوى <span class="req">*</span></label>
+          <select [(ngModel)]="form.classification">
+            <option *ngFor="let o of classificationOptions" [ngValue]="o.value">{{ o.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>القطاع <span class="req">*</span></label>
+          <select [(ngModel)]="form.sectorId" (ngModelChange)="onSectorChange()">
+            <option  [ngValue]="null" disabled>اختر قطاع</option>
+            <option *ngFor="let s of sectors" [ngValue]="s.id">{{ s.nameAr }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>الخدمة <span class="req">*</span></label>
+          <select [(ngModel)]="form.serviceId" [disabled]="!form.sectorId">
+            <option  [ngValue]="null" disabled>اختر خدمة</option>
+            <option *ngFor="let s of services" [ngValue]="s.id">{{ s.nameAr }}</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" [(ngModel)]="form.isInternalComplaint" />
+        شكوى داخلية (الشاكي موظف في الجهة الحكومية)
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" [(ngModel)]="form.isAffectedWorkerComplaint" />
+        شكوى عمالة متضررة
+      </label>
+
+      <div class="worker-fields" *ngIf="form.isAffectedWorkerComplaint">
+        <div class="grid-2">
+          <div class="field">
+            <label>المهنة</label>
+            <input type="text" [(ngModel)]="form.profession" placeholder="أدخل المهنة" />
+          </div>
+          <div class="field">
+            <label>قطاع الوظيفة</label>
+            <input type="text" [(ngModel)]="form.jobSector" placeholder="أدخل قطاع الوظيفة" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>التأمينات</label>
+            <select [(ngModel)]="form.insurance">
+              <option  [ngValue]="null">اختر نوع</option>
+              <option *ngFor="let o of insuranceOptions" [ngValue]="o.value">{{ o.label }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>تاريخ توقف العمل</label>
+            <input type="date" [(ngModel)]="form.workStopDate" />
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>الملف المرفق 1</label>
+          <input type="file" (change)="onFilesSelected($event)" multiple accept=".pdf,.jpg,.png,.docx" />
+        </div>
+      </div>
+
+      <button class="btn-primary next-btn" (click)="goToStep2()" [disabled]="!form.subject || !form.description || !form.governorateId || !form.centerId || !form.sectorId || !form.serviceId">
+        التالي
+      </button>
+    </section>
+
+    <!-- ============ STEP 2 ============ -->
+    <section class="form-panel" *ngIf="step() === 2">
+      <h2>الأولوية والكيان</h2>
+
+      <label>مستوى الأولوية <span class="req">*</span></label>
+      <div class="priority-options">
+        <label class="priority-option" *ngFor="let p of priorityOptions" [class.selected]="form.priority === p.value">
+          <input type="radio" name="priority" [value]="p.value" [(ngModel)]="form.priority" />
+          <strong>{{ p.label }}</strong>
+          <span>{{ p.desc }}</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label>الكيان الحكومي <span class="req">*</span></label>
+        <select [(ngModel)]="form.governmentEntityId">
+          <option  [ngValue]="null" disabled>اختر كيان</option>
+          <option *ngFor="let e of governmentEntities" [ngValue]="e.id">{{ e.nameAr }}</option>
+        </select>
+      </div>
+
+      <div class="info-note">
+        ℹ سيتم إرسال الشكوى إلى الكيان الحكومي المختار للمعالجة
+      </div>
+
+      <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+
+      <div class="duplicate-warning" *ngIf="duplicateResult()?.hasPossibleDuplicates">
+        <div class="duplicate-warning__header">⚠ لسه فيه شكاوى مشابهة محتملة - متأكد إنك عايز تكمل؟</div>
+      </div>
+
+      <div class="step-actions">
+        <button class="btn-outline" (click)="goToStep1()">السابق</button>
+        <button
+          class="btn-primary"
+          [disabled]="!form.governmentEntityId || submitting()"
+          (click)="submit(duplicateResult()?.hasPossibleDuplicates ?? false)">
+          {{ submitting() ? 'جارِ الإرسال...' : (duplicateResult()?.hasPossibleDuplicates ? 'متابعة رغم التشابه' : 'إرسال الشكوى') }}
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ STEP 3 - CONFIRMATION ============ -->
+    <section class="form-panel confirmation" *ngIf="step() === 3">
+      <div class="confirmation__icon">✓</div>
+      <h2>تم تسجيل الشكوى بنجاح</h2>
+      <p>سيتم مراجعة الشكوى ومعالجتها من الجهة المختصة</p>
+      <button class="btn-primary" (click)="finish()">العودة إلى الشكاوى</button>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,42 @@
+@use '../../../../styles/mixins';
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(11,74,46,0.06), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(179,32,44,0.05), transparent 40%),
+    var(--color-surface);
+  padding: var(--space-5);
+}
+
+.login-card {
+  @include mixins.card;
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-8) var(--space-6);
+  border-top: 5px solid var(--color-primary);
+  box-shadow: var(--shadow-lg);
+
+  &__brand {
+    text-align: center;
+    margin-bottom: var(--space-6);
+    img { width: 84px; height: 84px; object-fit: contain; margin-bottom: var(--space-3); }
+    h1 { font-size: 1.5rem; color: var(--color-primary-dark); }
+    p { color: var(--color-text-muted); font-weight: 600; margin-top: 4px; }
+  }
+}
+
+.login-btn { width: 100%; justify-content: center; margin-top: var(--space-3); font-size: 1rem; }
+
+.error {
+  color: var(--color-red);
+  background: var(--color-red-tint);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}

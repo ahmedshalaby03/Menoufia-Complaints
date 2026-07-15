@@ -1,0 +1,44 @@
+<div class="page-layout">
+  <app-sidebar role="admin" />
+
+  <main class="page-content" *ngIf="summary() as s">
+    <header class="page-header">
+      <div>
+        <h1>مرحباً {{ auth.currentUser()?.fullName }}</h1>
+        <p>استعرض جميع الشكاوى</p>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <app-stat-card label="مغلقة" [value]="s.closedCount" icon="✓" tone="primary" />
+      <app-stat-card label="قيد المعالجة" [value]="s.inProgressCount" icon="↻" tone="gold" />
+      <app-stat-card label="جديدة" [value]="s.newCount" icon="●" tone="neutral" />
+      <app-stat-card label="إجمالي الشكاوى" [value]="s.totalCount" icon="Σ" tone="red" />
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>ملخص سريع</h3>
+        <div class="summary-row"><span>نسبة الإنجاز</span><strong>{{ s.completionRatePercent }}%</strong></div>
+        <div class="summary-row"><span>المعلقة</span><strong>{{ s.rejectedCount }}</strong></div>
+        <div class="summary-row"><span>متوسط وقت الاستجابة</span><strong>{{ s.averageResponseTimeDays }} أيام</strong></div>
+      </div>
+
+      <div class="panel">
+        <h3>توزيع الأولويات</h3>
+        <div class="priority-row"><span class="badge badge-urgent">عاجل</span>
+          <div class="bar"><div class="bar__fill bar__fill--urgent" [style.width.%]="pct(s.priorityDistribution.urgent, s)"></div></div>
+          <span>{{ s.priorityDistribution.urgent }}</span></div>
+        <div class="priority-row"><span class="badge badge-high">عالي</span>
+          <div class="bar"><div class="bar__fill bar__fill--high" [style.width.%]="pct(s.priorityDistribution.high, s)"></div></div>
+          <span>{{ s.priorityDistribution.high }}</span></div>
+        <div class="priority-row"><span class="badge badge-medium">متوسط</span>
+          <div class="bar"><div class="bar__fill bar__fill--medium" [style.width.%]="pct(s.priorityDistribution.medium, s)"></div></div>
+          <span>{{ s.priorityDistribution.medium }}</span></div>
+        <div class="priority-row"><span class="badge badge-low">منخفض</span>
+          <div class="bar"><div class="bar__fill bar__fill--low" [style.width.%]="pct(s.priorityDistribution.low, s)"></div></div>
+          <span>{{ s.priorityDistribution.low }}</span></div>
+      </div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,21 @@
+## ========== Backend (.NET / ComplaintSystem) ========== ##
+Backend/**/bin/
+Backend/**/obj/
+Backend/**/.vs/
+Backend/**/*.user
+Backend/**/*.suo
+Backend/ComplaintSystem.API/appsettings.json
+Backend/**/Uploads/
+
+## ========== Frontend (Angular) ========== ##
+Frontend/**/node_modules/
+Frontend/**/dist/
+Frontend/**/.angular/
+Frontend/**/out-tsc/
+
+## ========== مشترك بين الاتنين ========== ##
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db

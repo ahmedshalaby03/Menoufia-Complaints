@@ -1,0 +1,102 @@
+@use 'tokens';
+@use 'mixins';
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-arabic);
+  background: var(--color-surface);
+  color: var(--color-text);
+  direction: rtl;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 700; color: var(--color-primary-dark); }
+p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+// ===== أزرار مشتركة =====
+.btn {
+  @include mixins.btn-base;
+  @include mixins.focus-ring;
+}
+.btn-primary {
+  @extend .btn;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: var(--color-text-on-primary);
+  &:hover { filter: brightness(1.08); box-shadow: var(--shadow-md); }
+}
+.btn-outline {
+  @extend .btn;
+  background: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  &:hover { background: var(--color-primary-tint); }
+}
+.btn-danger {
+  @extend .btn;
+  background: var(--color-red);
+  color: #fff;
+  &:hover { filter: brightness(1.1); }
+}
+
+// ===== حقول الفورم =====
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-4);
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-primary-dark);
+    .req { color: var(--color-red); margin-inline-start: 2px; }
+  }
+
+  input, textarea, select {
+    font-family: var(--font-arabic);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 0.95rem;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-light);
+      box-shadow: 0 0 0 3px var(--color-primary-tint);
+    }
+    &::placeholder { color: var(--color-text-muted); }
+  }
+  textarea { resize: vertical; min-height: 110px; }
+}
+
+// ===== Badges =====
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.badge-urgent { background: var(--color-red-tint); color: var(--color-priority-urgent); }
+.badge-high { background: #FEF3E7; color: var(--color-priority-high); }
+.badge-medium { background: #FBF3D9; color: var(--color-priority-medium); }
+.badge-low { background: var(--color-primary-tint); color: var(--color-priority-low); }
+.badge-status { background: var(--color-primary-tint); color: var(--color-primary-dark); }
+
+// ===== سكرول بار خفيف =====
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-light); }

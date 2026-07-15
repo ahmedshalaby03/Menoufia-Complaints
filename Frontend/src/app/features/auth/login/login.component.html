@@ -1,0 +1,26 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-card__brand">
+      <img src="assets/images/monoufia-logo.png" alt="شعار محافظة المنوفية" />
+      <h1>نظام الشكاوى</h1>
+      <p>محافظة المنوفية</p>
+    </div>
+
+    <form (ngSubmit)="submit()" class="login-form">
+      <div class="field">
+        <label>البريد الإلكتروني <span class="req">*</span></label>
+        <input type="email" name="email" [(ngModel)]="email" placeholder="ادخل بريدك الإلكتروني" />
+      </div>
+      <div class="field">
+        <label>كلمة المرور <span class="req">*</span></label>
+        <input type="password" name="password" [(ngModel)]="password" placeholder="ادخل رقمك السري" />
+      </div>
+
+      <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+
+      <button type="submit" class="btn-primary login-btn" [disabled]="loading()">
+        {{ loading() ? 'جارِ الدخول...' : 'دخول' }}
+      </button>
+    </form>
+  </div>
+</div>

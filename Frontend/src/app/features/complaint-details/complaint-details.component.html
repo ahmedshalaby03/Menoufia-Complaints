@@ -1,0 +1,97 @@
+<div class="page-layout">
+  <app-sidebar [role]="auth.isAdmin() ? 'admin' : 'employee'" />
+
+  <main class="page-content" *ngIf="complaint() as c">
+    <button class="back-link" (click)="goBack()">→ رجوع</button>
+
+    <header class="page-header">
+      <div>
+        <div class="title-row">
+          <h1>{{ c.subject }}</h1>
+          <app-priority-badge [priority]="c.priority" />
+        </div>
+        <p># {{ c.complaintNumber }} — بتاريخ {{ c.createdAt | date:'yyyy/MM/dd' }}</p>
+      </div>
+      <span class="badge badge-status current-status">{{ statusLabels[c.status] }}</span>
+    </header>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h3>تفاصيل الشكوى</h3>
+        <p class="description">{{ c.description }}</p>
+
+        <div class="info-grid">
+          <div><span>المحافظة</span><strong>{{ c.governorateName }}</strong></div>
+          <div><span>المركز/المدينة</span><strong>{{ c.centerName }}</strong></div>
+          <div *ngIf="c.district"><span>الحي/القرية</span><strong>{{ c.district }}</strong></div>
+          <div><span>القطاع</span><strong>{{ c.sectorName }}</strong></div>
+          <div><span>الخدمة</span><strong>{{ c.serviceName }}</strong></div>
+          <div><span>الكيان الحكومي</span><strong>{{ c.governmentEntityName || '—' }}</strong></div>
+          <div><span>مقدّمة بواسطة</span><strong>{{ c.createdByName }}</strong></div>
+          <div *ngIf="c.assignedToName"><span>معينة إلى</span><strong>{{ c.assignedToName }}</strong></div>
+        </div>
+
+        <div class="worker-box" *ngIf="c.isAffectedWorkerComplaint">
+          <h4>بيانات عمالة متضررة</h4>
+          <div class="info-grid">
+            <div *ngIf="c.profession"><span>المهنة</span><strong>{{ c.profession }}</strong></div>
+            <div *ngIf="c.jobSector"><span>قطاع الوظيفة</span><strong>{{ c.jobSector }}</strong></div>
+            <div *ngIf="c.workStopDate"><span>تاريخ توقف العمل</span><strong>{{ c.workStopDate | date:'yyyy/MM/dd' }}</strong></div>
+          </div>
+        </div>
+
+        <div class="attachments" *ngIf="c.attachments.length">
+          <h4>المرفقات</h4>
+          <a *ngFor="let a of c.attachments" [href]="a.filePath" target="_blank" class="attachment-chip">📎 {{ a.fileName }}</a>
+        </div>
+      </div>
+
+      <div class="side-col">
+        <div class="panel" *ngIf="auth.isAdmin()">
+          <h3>تحديث الحالة</h3>
+          <div class="field">
+            <label>الحالة الجديدة</label>
+            <select [(ngModel)]="selectedStatus">
+              <option *ngFor="let s of statusOptions" [ngValue]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>ملاحظات (اختياري)</label>
+            <textarea [(ngModel)]="statusNotes" placeholder="أضف ملاحظة عن سبب التحديث"></textarea>
+          </div>
+          <button class="btn-primary full-width" [disabled]="updatingStatus()" (click)="updateStatus()">
+            {{ updatingStatus() ? 'جارِ الحفظ...' : 'حفظ الحالة' }}
+          </button>
+
+          <p class="action-msg" *ngIf="actionMsg()">{{ actionMsg() }}</p>
+
+          <hr />
+
+          <h3>تعيين كيان حكومي</h3>
+          <div class="field">
+            <select [(ngModel)]="selectedEntityId">
+              <option  [ngValue]="null" disabled>اختر كيان</option>
+              <option *ngFor="let e of governmentEntities" [ngValue]="e.id">{{ e.nameAr }}</option>
+            </select>
+          </div>
+          <button class="btn-outline full-width" [disabled]="!selectedEntityId || updatingAssignment()" (click)="assignEntity()">
+            {{ updatingAssignment() ? 'جارِ التعيين...' : 'تعيين' }}
+          </button>
+        </div>
+
+        <div class="panel">
+          <h3>سجل الحالات</h3>
+          <div class="history-item" *ngFor="let h of c.statusHistory">
+            <div class="history-item__dot"></div>
+            <div>
+              <strong>{{ statusLabels[h.newStatus] }}</strong>
+              <span class="muted">{{ h.changedByName }} — {{ h.changedAt | date:'yyyy/MM/dd HH:mm' }}</span>
+              <p *ngIf="h.notes">{{ h.notes }}</p>
+            </div>
+          </div>
+          <p class="empty-state" *ngIf="!c.statusHistory.length">لا يوجد سجل بعد</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
