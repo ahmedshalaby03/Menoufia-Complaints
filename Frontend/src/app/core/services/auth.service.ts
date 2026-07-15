@@ -7,6 +7,13 @@ import { environment } from '../../../environments/environment';
 
 const STORAGE_KEY = 'complaint_system_auth';
 
+export interface RegisterRequest {
+  fullName: string;
+  email: string;
+  password: string;
+  role: 'Admin' | 'Employee';
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authState = signal<AuthResponse | null>(this.loadFromStorage());
@@ -23,6 +30,11 @@ export class AuthService {
         map(res => res.data),
         tap(auth => this.setSession(auth))
       );
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<{ data: AuthResponse }>(`${environment.apiUrl}/auth/register`, request)
+      .pipe(map(res => res.data));
   }
 
   private setSession(auth: AuthResponse) {

@@ -38,6 +38,9 @@
     <a *ngIf="role === 'admin'" routerLink="/admin/reports" routerLinkActive="active" class="nav-item">
       <span class="dot"></span> التقارير
     </a>
+    <a *ngIf="role === 'admin'" routerLink="/admin/register-user" routerLinkActive="active" class="nav-item">
+      <span class="dot"></span> تسجيل مستخدم
+    </a>
   </nav>
 
   <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>

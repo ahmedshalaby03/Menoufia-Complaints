@@ -25,6 +25,7 @@ export const routes: Routes = [
       { path: 'complaints/:id', loadComponent: () => import('./features/complaint-details/complaint-details.component').then(m => m.ComplaintDetailsComponent) },
       { path: 'inbox', loadComponent: () => import('./features/admin/inbox/inbox.component').then(m => m.InboxComponent) },
       { path: 'reports', loadComponent: () => import('./features/admin/reports/reports.component').then(m => m.ReportsComponent) },
+      { path: 'register-user', loadComponent: () => import('./features/admin/register-user/register-user.component').then(m => m.RegisterUserComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

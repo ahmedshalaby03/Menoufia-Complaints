@@ -1,0 +1,44 @@
+<div class="page-layout">
+  <app-sidebar role="admin" />
+
+  <main class="page-content">
+    <header class="page-header">
+      <div>
+        <h1>تسجيل مستخدم جديد</h1>
+        <p>إضافة موظف أو مشرف جديد للنظام</p>
+      </div>
+    </header>
+
+    <section class="form-panel">
+      <div class="field">
+        <label>الاسم الكامل <span class="req">*</span></label>
+        <input type="text" [(ngModel)]="form.fullName" placeholder="أدخل الاسم الكامل" />
+      </div>
+
+      <div class="field">
+        <label>البريد الإلكتروني <span class="req">*</span></label>
+        <input type="email" [(ngModel)]="form.email" placeholder="أدخل البريد الإلكتروني" />
+      </div>
+
+      <div class="field">
+        <label>كلمة المرور <span class="req">*</span></label>
+        <input type="password" [(ngModel)]="form.password" placeholder="أدخل كلمة مرور (8 أحرف على الأقل)" />
+      </div>
+
+      <div class="field">
+        <label>الدور <span class="req">*</span></label>
+        <select [(ngModel)]="form.role">
+          <option [ngValue]="'Employee'">موظف</option>
+          <option [ngValue]="'Admin'">مشرف</option>
+        </select>
+      </div>
+
+      <p class="success" *ngIf="successMsg()">{{ successMsg() }}</p>
+      <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+
+      <button class="btn-primary" [disabled]="submitting()" (click)="submit()">
+        {{ submitting() ? 'جارِ التسجيل...' : 'تسجيل المستخدم' }}
+      </button>
+    </section>
+  </main>
+</div>
