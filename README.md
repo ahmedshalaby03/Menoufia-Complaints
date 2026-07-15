@@ -127,7 +127,7 @@ ng serve -o
 
 | الدور | البريد الإلكتروني | كلمة المرور |
 |---|---|---|
-| مشرف (Admin) | `admin@menoufia.gov.eg` | `Admin@12345` |
+| مشرف (Admin) | `admin@gmail.com` | `Admin@123` |
 
 > لإنشاء حسابات موظفين جدد: سجّل دخول كأدمن، اعمل Authorize في Swagger بالتوكن، وانده على `POST /api/auth/register`.
 
@@ -176,5 +176,3 @@ ng serve -o
 **الفرونت إند:** Angular (Standalone) · TypeScript · SCSS
 
 ---
-
-<p align="center">مشروع تخرج — نظام الشكاوى الحكومية الموحدة، محافظة المنوفية</p>
